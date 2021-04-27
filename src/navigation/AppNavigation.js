@@ -35,7 +35,3 @@ export const AppNavigation = () => {
     </NavigationContainer>
   );
 }
-
-
-
-// export const AppNavigation = NavigationContainer(PostNavigator)
