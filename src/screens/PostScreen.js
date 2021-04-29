@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 
-export const PostScreen = ({}) => {
-
+export const PostScreen = ({route}) => {
+  // console.log(route)
   return (
     <View style={styles.center}>
       <Text>PostScreen</Text>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, FlatList } from 'react-native';
+import { StyleSheet, View, FlatList } from 'react-native';
 import { DATA } from '../data';
 import { Post } from '../components/Post';
 
-export const MainScreen = ({navigation, route}) => {
+export const MainScreen = ({navigation}) => {
 
-  const goToPost = () => {
-    navigation.navigate('PostScreen')
+  const openPostHandler = (post) => {
+    navigation.navigate('PostScreen', {post})
   }
 
   return (
@@ -14,7 +14,7 @@ export const MainScreen = ({navigation, route}) => {
       <FlatList
         data={DATA}
         keyExtractor={post => post.id.toString()}
-        renderItem={({item}) => <Post post={item} />}/>
+        renderItem={({item}) => <Post post={item} onOpen={openPostHandler} />}/>
     </View>
   )
 }
