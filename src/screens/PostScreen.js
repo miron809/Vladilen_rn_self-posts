@@ -8,7 +8,7 @@ import { AppHeaderIcon } from '../components/AppHeaderIcon';
 export const PostScreen = ({route, navigation}) => {
   const postId = route.params.post.id;
   const post = DATA.find(p => p.id === postId)
-  const starButton = post.booked ? 'ios-star' : 'ios-star-outline'
+  const starButton = post.favorite ? 'ios-star' : 'ios-star-outline'
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
