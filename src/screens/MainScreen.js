@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
 import { DATA } from '../data';
-import { Post } from '../components/Post';
+import { PostList } from '../components/PostList';
 
 export const MainScreen = ({navigation}) => {
 
@@ -9,18 +8,5 @@ export const MainScreen = ({navigation}) => {
     navigation.navigate('PostScreen', {post})
   }
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={DATA}
-        keyExtractor={post => post.id.toString()}
-        renderItem={({item}) => <Post post={item} onOpen={openPostHandler} />}/>
-    </View>
-  )
+  return <PostList data={DATA} onOpen={openPostHandler} />
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  }
-});

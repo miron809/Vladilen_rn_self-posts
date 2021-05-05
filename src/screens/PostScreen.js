@@ -1,13 +1,12 @@
 import React from 'react';
 import { StyleSheet,ScrollView, Alert, View, Text, Image, Button } from 'react-native';
-import { DATA } from '../data';
 import { THEME } from '../theme';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
+import { getCurrentPost } from '../helpers';
 
 export const PostScreen = ({route, navigation}) => {
-  const postId = route.params.post.id;
-  const post = DATA.find(p => p.id === postId)
+  const post = getCurrentPost(route);
   const starButton = post.favorite ? 'ios-star' : 'ios-star-outline'
 
   React.useLayoutEffect(() => {

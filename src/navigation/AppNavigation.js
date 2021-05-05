@@ -1,5 +1,4 @@
 import React from 'react';
-import { Platform } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,12 +10,15 @@ import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { MainScreen } from '../screens/MainScreen';
 import { FavoriteScreen } from '../screens/FavoriteScreen';
 import { PostScreen } from '../screens/PostScreen';
+import { getCurrentPost, isAndroid } from '../helpers';
 
-const isAndroid = () => {
-  return Platform.OS === 'android'
+const screens = {
+  favorite: 'Favorite',
+  main: 'Main',
+  post: 'Post'
 }
 
-const generalScreenOptions = {
+const navigatorScreenOptions = {
   gestureEnabled: false,
   headerStyle: {
     backgroundColor: isAndroid() ? THEME.PRIMARY_COLOR : '#fff',
@@ -24,59 +26,60 @@ const generalScreenOptions = {
   headerTintColor: isAndroid() ? '#fff' : THEME.PRIMARY_COLOR,
 }
 
-const iOsTabBarOptions = {
-  activeTintColor: THEME.PRIMARY_COLOR,
-}
+const stackScreenOptions = (screen, route) => {
+  const options = {
+    title: screen
+  }
 
-const androidTabBarOptions = {
-  // labeled: false,
-  // barStyle = {{backgroundColor: THEME.PRIMARY_COLOR}}
+  const headerLeft = () => (
+    <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+      <Item
+        title='Toggle Drawer'
+        iconName='ios-menu'
+        onPress={() => {
+          console.log('onPress')
+        }}
+      />
+    </HeaderButtons>
+  )
+
+  const headerRight = () => (
+    <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+      <Item
+        title='Take photo'
+        iconName='ios-camera'
+        onPress={() => {
+          console.log('onPress')
+        }}
+      />
+    </HeaderButtons>
+  )
+
+  switch (screen) {
+    case screens.main:
+      return {...options, headerLeft, headerRight};
+    case screens.favorite:
+      return {...options, headerLeft};
+    case screens.post:
+      return {title: `Post dated ${new Date(getCurrentPost(route).date).toLocaleDateString()}`}
+    default:
+      return options;
+  }
 }
 
 const MainStack = createStackNavigator();
-
 function MainStackScreen() {
   return (
-    <MainStack.Navigator
-      initialRouteName="Main"
-      screenOptions={generalScreenOptions}>
+    <MainStack.Navigator screenOptions={navigatorScreenOptions}>
       <MainStack.Screen
         name="MainScreen"
         component={MainScreen}
-        options={{
-          title: 'MainScreen',
-          headerRight: () => (
-            <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-              <Item
-                title='Take photo'
-                iconName='ios-camera'
-                onPress={() => {
-                  console.log('onPress')
-                }}
-              />
-            </HeaderButtons>
-          ),
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-              <Item
-                title='Toggle Drawer'
-                iconName='ios-menu'
-                onPress={() => {
-                  console.log('onPress')
-                }}
-              />
-            </HeaderButtons>
-          )
-        }}
-      />
+        options={stackScreenOptions(screens.main)}/>
       <MainStack.Screen
         name="PostScreen"
         component={PostScreen}
         options={({route}) => {
-          const date = route.params.post.date;
-          return ({
-            title: `Post dated ${new Date(date).toLocaleDateString()}`
-          })
+          return (stackScreenOptions(screens.post, route))
         }}
       />
     </MainStack.Navigator>
@@ -84,45 +87,26 @@ function MainStackScreen() {
 }
 
 const FavoriteStack = createStackNavigator();
-
 function FavoriteStackScreen() {
   return (
-    <FavoriteStack.Navigator
-      initialRouteName="Main"
-      screenOptions={generalScreenOptions}>
+    <FavoriteStack.Navigator screenOptions={navigatorScreenOptions}>
       <FavoriteStack.Screen
         name="FavoriteScreen"
         component={FavoriteScreen}
-        options={{
-          title: 'Favorite',
-          headerLeft: () => (
-            <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
-              <Item
-                title='Toggle Drawer'
-                iconName='ios-menu'
-                onPress={() => {
-                  console.log('onPress')
-                }}
-              />
-            </HeaderButtons>
-          )
-        }}
+        options={stackScreenOptions(screens.favorite)}
       />
       <FavoriteStack.Screen
         name="PostScreen"
         component={PostScreen}
         options={({route}) => {
-          const date = route.params.post.date;
-          return ({
-            title: `Post dated ${new Date(date).toLocaleDateString()}`
-          })
+          return (stackScreenOptions(screens.post, route))
         }}
       />
     </FavoriteStack.Navigator>
   )
 }
 
-const Tab = isAndroid() ? createBottomTabNavigator() : createBottomTabNavigator();
+const Tab = isAndroid() ? createMaterialBottomTabNavigator() : createBottomTabNavigator();
 export const AppNavigation = () => {
   return (
     <NavigationContainer>
@@ -133,15 +117,19 @@ export const AppNavigation = () => {
         shifting={true}
         barStyle={{backgroundColor: THEME.PRIMARY_COLOR}}
       >
-        <Tab.Screen name='Main' component={MainStackScreen}
-                    options={{
-                      tabBarIcon: ({color}) => (<Ionicons name='ios-albums' size={25} color={color}/>)
-                    }}
+        <Tab.Screen
+          name='Main'
+          component={MainStackScreen}
+          options={{
+            tabBarIcon: ({color}) => (<Ionicons name='ios-albums' size={25} color={color}/>)
+          }}
         />
-        <Tab.Screen name='Favorite' component={FavoriteStackScreen}
-                    options={{
-                      tabBarIcon: ({color}) => (<Ionicons name='ios-star' size={25} color={color}/>)
-                    }}
+        <Tab.Screen
+          name='Favorite'
+          component={FavoriteStackScreen}
+          options={{
+            tabBarIcon: ({color}) => (<Ionicons name='ios-star' size={25} color={color}/>)
+          }}
         />
       </Tab.Navigator>
     </NavigationContainer>

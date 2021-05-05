@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
 import { DATA } from '../data';
-import { Post } from '../components/Post';
+import { PostList } from '../components/PostList';
 
 export const FavoriteScreen = ({navigation}) => {
 
@@ -9,19 +8,7 @@ export const FavoriteScreen = ({navigation}) => {
     navigation.navigate('PostScreen', {post})
   }
 
+  const data = DATA.filter(post => post.favorite);
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={DATA.filter(post => post.favorite)}
-        keyExtractor={post => post.id.toString()}
-        renderItem={({item}) => <Post post={item} onOpen={openPostHandler} />}/>
-    </View>
-  )
+  return <PostList data={data} onOpen={openPostHandler} />
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  }
-});
