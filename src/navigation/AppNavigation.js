@@ -4,6 +4,7 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { THEME } from '../theme';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
@@ -11,15 +12,29 @@ import { MainScreen } from '../screens/MainScreen';
 import { FavoriteScreen } from '../screens/FavoriteScreen';
 import { PostScreen } from '../screens/PostScreen';
 
+const isAndroid = () => {
+  return Platform.OS === 'android'
+}
+
 const generalScreenOptions = {
   gestureEnabled: false,
   headerStyle: {
-    backgroundColor: Platform.OS === 'android' ? THEME.PRIMARY_COLOR : '#fff',
+    backgroundColor: isAndroid() ? THEME.PRIMARY_COLOR : '#fff',
   },
-  headerTintColor: Platform.OS === 'android' ? '#fff' : THEME.PRIMARY_COLOR,
+  headerTintColor: isAndroid() ? '#fff' : THEME.PRIMARY_COLOR,
+}
+
+const iOsTabBarOptions = {
+  activeTintColor: THEME.PRIMARY_COLOR,
+}
+
+const androidTabBarOptions = {
+  // labeled: false,
+  // barStyle = {{backgroundColor: THEME.PRIMARY_COLOR}}
 }
 
 const MainStack = createStackNavigator();
+
 function MainStackScreen() {
   return (
     <MainStack.Navigator
@@ -69,6 +84,7 @@ function MainStackScreen() {
 }
 
 const FavoriteStack = createStackNavigator();
+
 function FavoriteStackScreen() {
   return (
     <FavoriteStack.Navigator
@@ -106,23 +122,26 @@ function FavoriteStackScreen() {
   )
 }
 
-const Tab = createBottomTabNavigator();
+const Tab = isAndroid() ? createBottomTabNavigator() : createBottomTabNavigator();
 export const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        tabBarOptions={{
-          activeTintColor: THEME.PRIMARY_COLOR,
-        }}>
+        tabBarOptions={
+          {activeTintColor: THEME.PRIMARY_COLOR}
+        }
+        shifting={true}
+        barStyle={{backgroundColor: THEME.PRIMARY_COLOR}}
+      >
         <Tab.Screen name='Main' component={MainStackScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (<Ionicons name='ios-albums' size={size} color={color} />)
-          }}
+                    options={{
+                      tabBarIcon: ({color}) => (<Ionicons name='ios-albums' size={25} color={color}/>)
+                    }}
         />
         <Tab.Screen name='Favorite' component={FavoriteStackScreen}
-          options={{
-            tabBarIcon: ({color, size}) => (<Ionicons name='ios-star' size={size} color={color} />)
-          }}
+                    options={{
+                      tabBarIcon: ({color}) => (<Ionicons name='ios-star' size={25} color={color}/>)
+                    }}
         />
       </Tab.Navigator>
     </NavigationContainer>
