@@ -5,22 +5,25 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { THEME } from '../theme';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { MainScreen } from '../screens/MainScreen';
 import { FavoriteScreen } from '../screens/FavoriteScreen';
 import { PostScreen } from '../screens/PostScreen';
 import { getCurrentPost, isAndroid } from '../helpers';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { AboutScreen } from '../screens/AboutScreen';
+import { CreateScreen } from '../screens/CreateScreen';
 
 const screens = {
   favorite: 'Favorite',
   main: 'Main',
-  post: 'Post'
+  post: 'Post',
+  about: 'About',
+  create: 'Create'
 }
 
-const navigatorScreenOptions = {
-  gestureEnabled: false,
+const stackNavigatorOptions = {
   headerStyle: {
     backgroundColor: isAndroid() ? THEME.PRIMARY_COLOR : '#fff',
   },
@@ -47,9 +50,7 @@ const stackScreenOptions = (screen, route, navigation) => {
       <Item
         title='Take photo'
         iconName='ios-camera'
-        onPress={() => {
-          console.log('onPress')
-        }}
+        onPress={() => navigation.navigate('CreateScreen')}
       />
     </HeaderButtons>
   )
@@ -60,16 +61,23 @@ const stackScreenOptions = (screen, route, navigation) => {
     case screens.favorite:
       return {...options, headerLeft};
     case screens.post:
-      return {title: `Post dated ${new Date(getCurrentPost(route).date).toLocaleDateString()}`}
+      return {title: `Post dated ${new Date(getCurrentPost(route).date).toLocaleDateString()}`};
+    case screens.about:
+      return {...options, headerLeft};
+    case screens.create:
+      return {...options, headerLeft};
     default:
       return options;
   }
 }
 
+const drawerNavigatorOptions = {
+
+}
 const MainStack = createStackNavigator();
 function MainStackScreen() {
   return (
-    <MainStack.Navigator screenOptions={navigatorScreenOptions}>
+    <MainStack.Navigator screenOptions={stackNavigatorOptions}>
       <MainStack.Screen
         name="MainScreen"
         component={MainScreen}
@@ -91,7 +99,7 @@ function MainStackScreen() {
 const FavoriteStack = createStackNavigator();
 function FavoriteStackScreen() {
   return (
-    <FavoriteStack.Navigator screenOptions={navigatorScreenOptions}>
+    <FavoriteStack.Navigator screenOptions={stackNavigatorOptions}>
       <FavoriteStack.Screen
         name="FavoriteScreen"
         component={FavoriteScreen}
@@ -107,6 +115,36 @@ function FavoriteStackScreen() {
         }}
       />
     </FavoriteStack.Navigator>
+  )
+}
+
+const AboutStack = createStackNavigator();
+function AboutStackScreen() {
+  return (
+    <AboutStack.Navigator screenOptions={stackNavigatorOptions}>
+      <AboutStack.Screen
+        name="AboutScreen"
+        component={AboutScreen}
+        options={({route, navigation}) => {
+          return (stackScreenOptions(screens.about, route, navigation))
+        }}
+      />
+    </AboutStack.Navigator>
+  )
+}
+
+const CreateStack = createStackNavigator();
+function CreateStackScreen() {
+  return (
+    <CreateStack.Navigator screenOptions={stackNavigatorOptions}>
+      <CreateStack.Screen
+        name="CreateScreen"
+        component={CreateScreen}
+        options={({route, navigation}) => {
+          return (stackScreenOptions(screens.create, route, navigation))
+        }}
+      />
+    </CreateStack.Navigator>
   )
 }
 
@@ -143,10 +181,18 @@ const DrawerNavigator = createDrawerNavigator();
 export const AppNavigation = () => {
   return (
     <NavigationContainer>
-      <DrawerNavigator.Navigator>
-        <DrawerNavigator.Screen name='Main' component={MainBottomTabScreen} />
-        <DrawerNavigator.Screen name='About' component={MainBottomTabScreen} />
-        <DrawerNavigator.Screen name='Create' component={MainBottomTabScreen} />
+      <DrawerNavigator.Navigator drawerContentOptions={{
+        activeTintColor: THEME.PRIMARY_COLOR,
+        labelStyle: {
+          fontFamily: 'open-bold'
+        }
+      }}>
+        <DrawerNavigator.Screen
+          name='Main'
+          component={MainBottomTabScreen}
+        />
+        <DrawerNavigator.Screen name='About' component={AboutStackScreen} />
+        <DrawerNavigator.Screen name='Create' component={CreateStackScreen} />
       </DrawerNavigator.Navigator>
     </NavigationContainer>
   );
