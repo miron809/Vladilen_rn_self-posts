@@ -1,5 +1,5 @@
 import React from 'react';
-import { DATA } from '../data';
+import { useSelector } from 'react-redux';
 import { PostList } from '../components/PostList';
 
 export const FavoriteScreen = ({navigation}) => {
@@ -8,7 +8,7 @@ export const FavoriteScreen = ({navigation}) => {
     navigation.navigate('PostScreen', {post})
   }
 
-  const data = DATA.filter(post => post.favorite);
+  const favoritePosts = useSelector(state => state.post.favoritePosts)
 
-  return <PostList data={data} onOpen={openPostHandler} />
+  return <PostList data={favoritePosts} onOpen={openPostHandler} />
 }
