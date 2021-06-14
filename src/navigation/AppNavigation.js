@@ -15,7 +15,7 @@ import { getCurrentPost, isAndroid } from '../helpers';
 import { AboutScreen } from '../screens/AboutScreen';
 import { CreateScreen } from '../screens/CreateScreen';
 
-const screens = {
+export const screens = {
   favorite: 'Favorite',
   main: 'Main',
   post: 'Post',
@@ -50,7 +50,7 @@ const stackScreenOptions = (screen, route, navigation) => {
       <Item
         title='Take photo'
         iconName='ios-camera'
-        onPress={() => navigation.navigate('CreateScreen')}
+        onPress={() => navigation.navigate(screens.create)}
       />
     </HeaderButtons>
   )
@@ -71,22 +71,19 @@ const stackScreenOptions = (screen, route, navigation) => {
   }
 }
 
-const drawerNavigatorOptions = {
-
-}
 const MainStack = createStackNavigator();
 function MainStackScreen() {
   return (
     <MainStack.Navigator screenOptions={stackNavigatorOptions}>
       <MainStack.Screen
-        name="MainScreen"
+        name={screens.main}
         component={MainScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.main, route, navigation))
         }}
       />
       <MainStack.Screen
-        name="PostScreen"
+        name={screens.post}
         component={PostScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.post, route, navigation))
@@ -101,14 +98,14 @@ function FavoriteStackScreen() {
   return (
     <FavoriteStack.Navigator screenOptions={stackNavigatorOptions}>
       <FavoriteStack.Screen
-        name="FavoriteScreen"
+        name={screens.favorite}
         component={FavoriteScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.favorite, route, navigation))
         }}
       />
       <FavoriteStack.Screen
-        name="PostScreen"
+        name={screens.post}
         component={PostScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.post, route, navigation))
@@ -123,7 +120,7 @@ function AboutStackScreen() {
   return (
     <AboutStack.Navigator screenOptions={stackNavigatorOptions}>
       <AboutStack.Screen
-        name="AboutScreen"
+        name={screens.about}
         component={AboutScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.about, route, navigation))
@@ -138,7 +135,7 @@ function CreateStackScreen() {
   return (
     <CreateStack.Navigator screenOptions={stackNavigatorOptions}>
       <CreateStack.Screen
-        name="CreateScreen"
+        name={screens.create}
         component={CreateScreen}
         options={({route, navigation}) => {
           return (stackScreenOptions(screens.create, route, navigation))
@@ -159,14 +156,14 @@ function MainBottomTabScreen() {
       barStyle={{backgroundColor: THEME.PRIMARY_COLOR}}
     >
       <MainBottomTab.Screen
-        name='Main'
+        name={screens.main}
         component={MainStackScreen}
         options={{
           tabBarIcon: ({color}) => (<Ionicons name='ios-albums' size={25} color={color}/>)
         }}
       />
       <MainBottomTab.Screen
-        name='Favorite'
+        name={screens.favorite}
         component={FavoriteStackScreen}
         options={{
           tabBarIcon: ({color}) => (<Ionicons name='ios-star' size={25} color={color}/>)
@@ -188,11 +185,11 @@ export const AppNavigation = () => {
         }
       }}>
         <DrawerNavigator.Screen
-          name='Main'
+          name={screens.main}
           component={MainBottomTabScreen}
         />
-        <DrawerNavigator.Screen name='About' component={AboutStackScreen} />
-        <DrawerNavigator.Screen name='Create' component={CreateStackScreen} />
+        <DrawerNavigator.Screen name={screens.about} component={AboutStackScreen} />
+        <DrawerNavigator.Screen name={screens.create} component={CreateStackScreen} />
       </DrawerNavigator.Navigator>
     </NavigationContainer>
   );

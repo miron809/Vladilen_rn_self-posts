@@ -1,4 +1,4 @@
-import { LOAD_POSTS, TOGGLE_FAVORITE } from '../types';
+import { LOAD_POSTS, REMOVE_POST, TOGGLE_FAVORITE } from '../types';
 
 const initialState = {
   allPosts: [],
@@ -24,6 +24,12 @@ export const postReducer = (state = initialState, action) => {
         ...state,
         allPosts,
         favoritePosts: allPosts.filter(post => post.favorite)
+      }
+    case REMOVE_POST:
+      return {
+        ...state,
+        allPosts: state.allPosts.filter(p => p.id !== action.payload),
+        favoritePosts: state.favoritePosts.filter(p => p.id !== action.payload),
       }
     default:
       return state

@@ -5,7 +5,8 @@ import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { getCurrentPost } from '../helpers';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleFavorite } from '../store/actions/post';
+import { removePost, toggleFavorite } from '../store/actions/post';
+import { screens } from '../navigation/AppNavigation';
 
 export const PostScreen = ({route, navigation}) => {
   const post = getCurrentPost(route);
@@ -44,10 +45,17 @@ export const PostScreen = ({route, navigation}) => {
         { text: "Cancel" },
         {
           text: "OK",
-          onPress: () => console.log("OK Pressed")
+          onPress() {
+            navigation.navigate(screens.main)
+            dispatch(removePost(post.id))
+          }
         }
       ]
     );
+  }
+
+  if (!post) {
+    return null;
   }
 
   return (
