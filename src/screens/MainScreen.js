@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { PostList } from '../components/PostList';
 import { loadPosts } from '../store/actions/post';
 import { screens } from '../navigation/AppNavigation';
+import { THEME } from '../theme';
 
 export const MainScreen = ({navigation}) => {
 
@@ -17,6 +19,23 @@ export const MainScreen = ({navigation}) => {
   }, [dispatch])
 
   const allPosts = useSelector(state => state.post.allPosts)
+  const loading = useSelector(state => state.post.loading)
 
-  return <PostList data={allPosts} onOpen={openPostHandler} />
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator color={THEME.PRIMARY_COLOR}/>
+      </View>
+    )
+  }
+
+  return <PostList data={allPosts} onOpen={openPostHandler}/>
 }
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})

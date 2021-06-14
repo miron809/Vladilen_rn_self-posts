@@ -2,7 +2,8 @@ import { ADD_POST, LOAD_POSTS, REMOVE_POST, TOGGLE_FAVORITE } from '../types';
 
 const initialState = {
   allPosts: [],
-  favoritePosts: []
+  favoritePosts: [],
+  loading: true
 }
 
 export const postReducer = (state = initialState, action) => {
@@ -11,7 +12,8 @@ export const postReducer = (state = initialState, action) => {
       return {
         ...state,
         allPosts: action.payload,
-        favoritePosts: action.payload.filter(post => post.favorite)
+        favoritePosts: action.payload.filter(post => post.favorite),
+        loading: false
       }
     case TOGGLE_FAVORITE:
       const allPosts = state.allPosts.map(post => {

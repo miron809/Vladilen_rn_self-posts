@@ -20,8 +20,8 @@ export const PostScreen = ({route, navigation}) => {
   const dispatch = useDispatch();
 
   const toggleHandler = useCallback(() => {
-    dispatch(toggleFavorite(post.id))
-  }, [dispatch, post.id])
+    dispatch(toggleFavorite(post))
+  }, [dispatch, post])
 
   useEffect(() => {
     navigation.setOptions({

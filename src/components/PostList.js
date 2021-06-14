@@ -4,6 +4,10 @@ import { Post } from './Post';
 
 export const PostList = ({data, onOpen}) => {
 
+  if (!data.length) {
+    return <View style={styles.container}><Text style={styles.noItems}>No items</Text></View>
+  }
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -17,5 +21,11 @@ export const PostList = ({data, onOpen}) => {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+  },
+  noItems: {
+    fontFamily: 'open-regular',
+    textAlign: 'center',
+    marginVertical: 10,
+    fontSize: 18
   }
 });
