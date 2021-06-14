@@ -1,1 +1,2 @@
 export const LOAD_POSTS = 'LOAD_POSTS'
+export const TOGGLE_FAVORITE = 'TOGGLE_FAVORITE'

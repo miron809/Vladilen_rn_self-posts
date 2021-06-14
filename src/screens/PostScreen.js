@@ -1,29 +1,40 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { StyleSheet,ScrollView, Alert, View, Text, Image, Button } from 'react-native';
 import { THEME } from '../theme';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { AppHeaderIcon } from '../components/AppHeaderIcon';
 import { getCurrentPost } from '../helpers';
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleFavorite } from '../store/actions/post';
 
 export const PostScreen = ({route, navigation}) => {
   const post = getCurrentPost(route);
-  const starButton = post.favorite ? 'ios-star' : 'ios-star-outline'
 
-  React.useLayoutEffect(() => {
+  const isFavorite = useSelector(state => {
+    return state.post.favoritePosts.some(p => p.id === post.id)
+  })
+
+  const starButton = isFavorite ? 'ios-star' : 'ios-star-outline'
+
+  const dispatch = useDispatch();
+
+  const toggleHandler = useCallback(() => {
+    dispatch(toggleFavorite(post.id))
+  }, [dispatch, post.id])
+
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
           <Item
             title='Favorite'
             iconName={starButton}
-            onPress={() => {
-              console.log('onPress')
-            }}
+            onPress={() => toggleHandler()}
           />
         </HeaderButtons>
       )
     });
-  }, [navigation]);
+  }, [navigation, isFavorite]);
 
   const removeHandler = () => {
     Alert.alert(

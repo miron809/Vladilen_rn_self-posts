@@ -1,4 +1,4 @@
-import { LOAD_POSTS } from '../types';
+import { LOAD_POSTS, TOGGLE_FAVORITE } from '../types';
 
 const initialState = {
   allPosts: [],
@@ -12,6 +12,18 @@ export const postReducer = (state = initialState, action) => {
         ...state,
         allPosts: action.payload,
         favoritePosts: action.payload.filter(post => post.favorite)
+      }
+    case TOGGLE_FAVORITE:
+      const allPosts = state.allPosts.map(post => {
+        if (post.id === action.payload) {
+          post.favorite = !post.favorite
+        }
+        return post
+      })
+      return {
+        ...state,
+        allPosts,
+        favoritePosts: allPosts.filter(post => post.favorite)
       }
     default:
       return state
