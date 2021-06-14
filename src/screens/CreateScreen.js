@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -14,21 +14,26 @@ import { THEME } from '../theme';
 import { useDispatch } from 'react-redux';
 import { addPost } from '../store/actions/post';
 import { screens } from '../navigation/AppNavigation';
+import { PhotoPicker } from '../components/PhotoPicker';
 
 export const CreateScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [text, setText] = useState('')
-  const img = 'https://cdn.shopify.com/s/files/1/0286/9208/6863/products/eaas_nano_clearcola_1200_ns_e96c5cbc-ae26-48ea-84cc-3f00a5865afb_600x600.png?v=1586813490';
+  const imgRef = useRef()
 
   const saveHandler = () => {
     const post = {
       date: new Date().toJSON(),
       text,
-      img,
+      img: imgRef.current,
       favorite: false
     }
     dispatch(addPost(post))
     navigation.navigate(screens.main)
+  }
+
+  const photoPickHandler = (uri) => {
+    imgRef.current = uri;
   }
 
   return (
@@ -43,14 +48,13 @@ export const CreateScreen = ({navigation}) => {
             onChangeText={setText}
             multiline
           />
-          <Image
-            source={{uri: img}}
-            style={{width: '100%', height: 200, marginBottom: 10}}
-          />
+          <PhotoPicker onPick={photoPickHandler} />
           <Button
             title='Create post'
             color={THEME.PRIMARY_COLOR}
-            onPress={saveHandler}/>
+            onPress={saveHandler}
+            disabled={!text}
+          />
         </View>
       </TouchableWithoutFeedback>
     </ScrollView>

@@ -32,6 +32,7 @@ export const postReducer = (state = initialState, action) => {
         favoritePosts: state.favoritePosts.filter(p => p.id !== action.payload),
       }
     case ADD_POST:
+      // console.log(action)
       return {
         ...state,
         allPosts: [{...action.payload}, ...state.allPosts]

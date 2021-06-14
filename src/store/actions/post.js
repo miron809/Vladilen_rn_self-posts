@@ -25,8 +25,6 @@ export const removePost = id => {
 export const addPost = post => {
   post.id = Date.now().toString()
 
-  console.log(post)
-
   return {
     type: ADD_POST,
     payload: post,
